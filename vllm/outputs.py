@@ -53,6 +53,7 @@ class RequestOutput:
         prompt: The prompt string of the request.
         prompt_token_ids: The token IDs of the prompt.
         outputs: The output sequences of the request.
+        probs: The probability of the whole vocabulary for each token in the output sequence.
     """
     def __init__(
         self,
@@ -60,13 +61,16 @@ class RequestOutput:
         prompt: str,
         prompt_token_ids: List[int],
         outputs: List[CompletionOutput],
+        probs: List[List[float]],
     ) -> None:
         self.request_id = request_id
         self.prompt = prompt
         self.prompt_token_ids = prompt_token_ids
         self.outputs = outputs
+        ##TODO:need to add the probability of the whole vocabulary to the output
+        self.probs = probs
 
-    @classmethod
+    @classmethod 
     def from_seq_group(cls, seq_group: SequenceGroup) -> "RequestOutput":
         # Get the top-n sequences.
         n = seq_group.sampling_params.n

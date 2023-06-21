@@ -66,6 +66,7 @@ class LLM:
         sampling_params: Optional[SamplingParams] = None,
         prompt_token_ids: Optional[List[List[int]]] = None,
         use_tqdm: bool = True,
+        return_dict_in_generate: bool = False,
     ) -> List[RequestOutput]:
         """Generates the completions for the input prompts.
 

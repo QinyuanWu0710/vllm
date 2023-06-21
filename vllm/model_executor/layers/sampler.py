@@ -78,7 +78,7 @@ class Sampler(nn.Module):
             probs = _apply_top_p_top_k(probs, top_ps, top_ks)
 
         # Sample the next tokens.
-        return _sample(probs, logprobs, input_metadata)
+        return _sample(probs, logprobs, input_metadata), probs
 
 
 def _prune_hidden_states(

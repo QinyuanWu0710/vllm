@@ -194,7 +194,7 @@ class GPTNeoXForCausalLM(nn.Module):
         self.embed_out = ColumnParallelLinear(config.hidden_size, config.vocab_size,
                                               bias=False, gather_output=False,
                                               perform_initialization=False)
-        self.sampler = Sampler(config.vocab_size)
+        self.sampler, self.probs = Sampler(config.vocab_size)
 
     def forward(
         self,
@@ -206,9 +206,9 @@ class GPTNeoXForCausalLM(nn.Module):
     ) -> Dict[int, SequenceOutputs]:
         hidden_states = self.gpt_neox(
             input_ids, positions, kv_caches, input_metadata, cache_events)
-        next_tokens = self.sampler(
+        next_tokens, probs = self.sampler(
             self.embed_out.weight, hidden_states, input_metadata)
-        return next_tokens
+        return next_tokens, probs
 
     _column_parallel_weights = ["embed_in.weight", "embed_out.weight", "dense_h_to_4h.weight", "dense_h_to_4h.bias"]
     _row_parallel_weights = ["dense.weight", "dense_4h_to_h.weight"]
